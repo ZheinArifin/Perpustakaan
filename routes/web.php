@@ -23,3 +23,8 @@ Route:: post('/login', 'LoginController@PostLogin')->name('PostLogin');
 
 // Logout
 Route:: get('/logout', 'LoginController@Logout')->name('Logout');
+
+// Page
+Route:: get('/Dashboard', function () {
+    return view('Page.index');
+})->name('Login');

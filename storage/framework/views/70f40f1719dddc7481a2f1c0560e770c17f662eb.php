@@ -22,6 +22,14 @@
   <!-- /.login-logo -->
   <div class="card">
     <div class="card-body login-card-body">
+      <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-info alert-rounded" id="success" style="display: none">
+            </div>
+            <div class="alert alert-warning alert-rounded" id="fail" style="display: none">
+            </div>
+        </div>
+      </div>
       <p class="login-box-msg">Sign in to start your session</p>
 
       <form action="<?php echo e(route('PostLogin')); ?>" method="post">
@@ -60,23 +68,7 @@
         </div>
       </form>
 
-      <div class="social-auth-links text-center mb-3">
-        <p>- OR -</p>
-        <a href="#" class="btn btn-block btn-primary">
-          <i class="fab fa-facebook mr-2"></i> Sign in using Facebook
-        </a>
-        <a href="#" class="btn btn-block btn-danger">
-          <i class="fab fa-google-plus mr-2"></i> Sign in using Google+
-        </a>
-      </div>
-      <!-- /.social-auth-links -->
-
-      <p class="mb-1">
-        <a href="forgot-password.html">I forgot my password</a>
-      </p>
-      <p class="mb-0">
-        <a href="register.html" class="text-center">Register a new membership</a>
-      </p>
+       
     </div>
     <!-- /.login-card-body -->
   </div>
@@ -91,4 +83,30 @@
 <script src="<?php echo e(asset('dist/js/adminlte.min.js')); ?>"></script>
 </body>
 </html>
-<?php /**PATH C:\xampp\htdocs\Perpustakaan\resources\views/Login/index.blade.php ENDPATH**/ ?>
+
+<?php
+if (Session('cek') == "Berhasil") {
+  ?>
+  <script type="text/javascript">
+       location.href="/Dashboard";
+  </script> 
+   <?php
+}elseif (Session('cek') == "Gagal") {
+  ?>
+  <script type="text/javascript">
+      $('html, body').animate({ scrollTop: 0 }, 'slow');
+      var alert = document.getElementById("fail");
+      setTimeout(function() {
+          $("#fail").slideDown("slow");
+      }, 2000);
+      alert.innerHTML= "<i class='fas fa-exclamation-triangle'></i> Email Atau Password Anda Salah!!";
+
+      setTimeout(function() {
+          $("#fail").fadeTo(2000, 500).slideUp(500, function(){
+          $("#fail").slideUp(500);
+          });
+      }, 5000);
+  </script>
+  <?php
+}
+?><?php /**PATH C:\xampp\htdocs\Perpustakaan\resources\views/Login/index.blade.php ENDPATH**/ ?>
