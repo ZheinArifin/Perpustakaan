@@ -10,7 +10,7 @@ class BukuController extends Controller
 {
     public function edit_buku(Request $request, $id){
         $buku = Buku::find($id);
-        return view('Page.edit-buku')
+        return view('Page.Buku.edit-buku')
         ->with("buku",$buku)
         ->with("id",$id);
     }

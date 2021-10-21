@@ -214,7 +214,7 @@
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <li class="nav-item menu-open">
-            <a href="/dashboard" class="nav-link active">
+            <a href="/dashboard" class="nav-link <?php echo e(Request::is('dashboard*') ? 'active' : ''); ?>">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Dashboard
@@ -223,9 +223,21 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="<?php echo e(route('Buku')); ?>" class="nav-link">
+            <a href="<?php echo e(route('Anggota')); ?>" class="nav-link <?php echo e(Request::is('anggota*') ? 'active' : ''); ?>">
+              <i class="nav-icon fas fa-user"></i>
+              <p>Anggota</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="<?php echo e(route('Buku')); ?>" class="nav-link <?php echo e(Request::is('books*') ? 'active' : ''); ?>">
               <i class="nav-icon fas fa-book"></i>
               <p>Buku</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="<?php echo e(route('Peminjaman')); ?>" class="nav-link <?php echo e(Request::is('peminjaman*') ? 'active' : ''); ?>">
+              <i class="nav-icon fas fa-book-open"></i>
+              <p>Peminjaman</p>
             </a>
           </li>
           <li class="nav-item">
@@ -333,6 +345,20 @@
       "serverSide": true,
       "ajax": "./server_side/server_processing.php"
     });
+    $('#example3').DataTable({
+      "paging": true,
+      "responsive": true,
+      "processing": true,
+      "serverSide": true,
+      "ajax": "./server_side/server_processing_anggota.php"
+    });
+    $('#example4').DataTable({
+      "paging": true,
+      "responsive": true,
+      "processing": true,
+      "serverSide": true,
+      "ajax": "./server_side/server_processing_peminjaman.php"
+    });
   });
 </script>
 
@@ -439,6 +465,43 @@ function hapus_buku(x) {
               error:function(xhr, status, error){
                
                   swal("Warning!", "Data Buku Gagal Dihapus!"+xhr.responseText, "warning");
+              }
+          });
+    });
+}
+
+function hapus_anggota(x) {
+  var del_id= x;
+  var token = " <?php echo e(csrf_token()); ?>";
+  swal({
+    title: "Apakah Anda Yakin?",
+    text: "Ketika Menghapus, Anda Tidak Bisa Mengembalikan Data Kembali",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  })
+  .then((willDelete) => {
+    if (!willDelete) return;
+          $.ajax({
+              url: "/anggota/delete/"+del_id,
+              type: "DELETE",
+              dataType: "JSON",
+              data: {
+                  "id": del_id,
+                  "_token" : token
+              },
+              success: function (data) {
+              if(data.message =="Berhasil"){
+                  swal("Sukses!", "Data Anggota Berhasil Dihapus!", "success").then(function(){
+                      location.href="/anggota";
+                  });
+              }else{
+                  swal("Warning!", "Data Anggota Gagal Dihapus!", "warning");
+              }
+              },
+              error:function(xhr, status, error){
+               
+                  swal("Warning!", "Data Anggota Gagal Dihapus!"+xhr.responseText, "warning");
               }
           });
     });

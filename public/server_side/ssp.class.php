@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(0);
 /*
  * Helper functions for building a DataTables server-side processing SQL query
  *
@@ -31,7 +31,7 @@ class SSP {
 	 *  @param  array $data    Data from the SQL get
 	 *  @return array          Formatted data in a row based format
 	 */
-	static function data_output ( $columns, $data )
+	static function data_output ( $columns, $data, $table )
 	{
 		$out = array();
 
@@ -52,13 +52,64 @@ class SSP {
 				}
 				else {
                     if(!empty($column['db'])){
-                        $row[ $column['dt'] ] = $data[$i][ $columns[$j]['db'] ];
+						$con=mysqli_connect('localhost','root','','perpustakaan');
+						if($table == "peminjaman"){
+							
+							if($j == 4){
+								if($data[$i][ $columns[4]['db'] ] == "Dipinjam" || $data[$i][ $columns[4]['db'] == 'Dikembalikan']){
+									if($data[$i][ $columns[4]['db'] ] == "Dipinjam"){
+										$status = "Borrow";
+										$color = "btn-danger";
+									}elseif($data[$i][ $columns[4]['db'] ] == "Dikembalikan"){
+										$status = "Returned";
+										$color = "btn-success";
+									}else{
+										$status = "Waiting";
+										$color = "btn-warning";
+									}
+									$row[ $column['dt'] ] = "<center><a href=/peminjaman/$id class='btn $color text-white' style='border-radius:25px; padding:5px 15px'>$status</a>
+									";
+								}
+							}else{
+								if($j == '1' || $j == '2'){
+									$dt = $data[$i][ $columns[$j]['db'] ];
+								}else{
+									$dt="";
+								}
+								$anggota = mysqli_fetch_array(mysqli_query($con, "SELECT * FROM anggota WHERE id='$dt'"));
+								$buku = mysqli_fetch_array(mysqli_query($con, "SELECT * FROM buku WHERE kd_buku='$dt'"));
+								if(!empty($anggota)){
+									$row[ $column['dt'] ] = $anggota['nama'];
+								}elseif(!empty($buku)){
+									$row[ $column['dt'] ] = $buku['judul_buku'];
+								}else{
+									$row[ $column['dt'] ] = $data[$i][ $columns[$j]['db'] ];
+								}
+								
+							}
+							
+						}else{
+							$row[ $column['dt'] ] = $data[$i][ $columns[$j]['db'] ];
+						}
+						
                     }
                     else{
 						$id = $data[$i][ $columns[0]['db'] ];
-                        $row[ $column['dt'] ] = "<center><a href=/book/edit/$id class='btn btn-warning text-white' style='border-radius:25px; padding:5px 15px'><i class='fas fa-edit'></i> Edit</a> &nbsp
-						<a href='javascript:void(0)' onclick=hapus_buku('$id')  class='btn btn-danger text-white' style='border-radius:25px; padding:5px 15px'><i class='fas fa-trash'></i> Delete</a></center>
-						";
+						// mengecek tabel yang dikirim kan
+						if($table == "buku"){
+							$row[ $column['dt'] ] = "<center><a href=/book/edit/$id class='btn btn-warning text-white' style='border-radius:25px; padding:5px 15px; width:50px' title='edit'><i class='fas fa-edit'></i> </a> &nbsp 
+							<a href='javascript:void(0)' onclick=hapus_buku('$id')  class='btn btn-danger text-white' style='border-radius:25px; padding:5px 15px; width:50px' title='Delete'><i class='fas fa-trash'></i> </a></center>
+							";
+						}elseif($table == "anggota"){
+							$row[ $column['dt'] ] = "<center><a href=/anggota/edit/$id class='btn btn-warning text-white' style='border-radius:25px; padding:5px 15px; width:50px' title='edit'><i class='fas fa-edit'></i> </a> &nbsp 
+							<a href='javascript:void(0)' onclick=hapus_anggota('$id')  class='btn btn-danger text-white' style='border-radius:25px; padding:5px 15px; width:50px' title='Delete'><i class='fas fa-trash'></i> </a></center>
+							";
+						}elseif($table == "peminjaman"){
+							$row[ $column['dt'] ] = "<center><a href=/peminjaman/$id class='btn btn-warning text-white' style='border-radius:25px; padding:5px 15px; width:50px' title='edit' ><i class='fas fa-edit'></i></a> 
+							<a href='javascript:void(0)' onclick=hapus_peminjaman('$id')  class='btn btn-danger text-white' style='border-radius:25px; padding:5px 15px; width:50px' title='Delete'><i class='fas fa-trash'></i> </a></center>
+							";
+						}
+						
                     }
 				}
 			}
@@ -292,7 +343,7 @@ class SSP {
 				0,
 			"recordsTotal"    => intval( $recordsTotal ),
 			"recordsFiltered" => intval( $recordsFiltered ),
-			"data"            => self::data_output( $columns, $data )
+			"data"            => self::data_output( $columns, $data, $table )
 		);
 	}
 
@@ -384,7 +435,7 @@ class SSP {
 				0,
 			"recordsTotal"    => intval( $recordsTotal ),
 			"recordsFiltered" => intval( $recordsFiltered ),
-			"data"            => self::data_output( $columns, $data )
+			"data"            => self::data_output( $columns, $data, $table )
 		);
 	}
 

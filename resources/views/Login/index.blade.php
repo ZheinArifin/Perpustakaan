@@ -87,7 +87,7 @@
 if (Session('cek') == "Berhasil") {
   ?>
   <script type="text/javascript">
-       location.href="/Dashboard";
+       location.href="/dashboard";
   </script> 
    <?php
 }elseif (Session('cek') == "Gagal") {
