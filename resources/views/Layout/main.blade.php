@@ -1,3 +1,8 @@
+
+<?php 
+$con=mysqli_connect('localhost','root','','perpustakaan');
+$dt = mysqli_fetch_array(mysqli_query($con, "SELECT COUNT(*) as x FROM peminjaman WHERE status='Menunggu Persetujuan'"));
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,120 +55,20 @@
       <li class="nav-item d-none d-sm-inline-block">
         <a href="index3.html" class="nav-link">Home</a>
       </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a href="#" class="nav-link">Contact</a>
-      </li>
+      
     </ul>
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
       <!-- Navbar Search -->
       <li class="nav-item">
-        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-          <i class="fas fa-search"></i>
-        </a>
-        <div class="navbar-search-block">
-          <form class="form-inline">
-            <div class="input-group input-group-sm">
-              <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
-              <div class="input-group-append">
-                <button class="btn btn-navbar" type="submit">
-                  <i class="fas fa-search"></i>
-                </button>
-                <button class="btn btn-navbar" type="button" data-widget="navbar-search">
-                  <i class="fas fa-times"></i>
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
+        
+        
       </li>
 
       <!-- Messages Dropdown Menu -->
-      <li class="nav-item dropdown">
-        <a class="nav-link" data-toggle="dropdown" href="#">
-          <i class="far fa-comments"></i>
-          <span class="badge badge-danger navbar-badge">3</span>
-        </a>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <a href="#" class="dropdown-item">
-            <!-- Message Start -->
-            <div class="media">
-              <img src="{{asset('dist/img/user1-128x128.jpg')}}')}}" alt="User Avatar" class="img-size-50 mr-3 img-circle">
-              <div class="media-body">
-                <h3 class="dropdown-item-title">
-                  Brad Diesel
-                  <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
-                </h3>
-                <p class="text-sm">Call me whenever you can...</p>
-                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-              </div>
-            </div>
-            <!-- Message End -->
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <!-- Message Start -->
-            <div class="media">
-              <img src="{{asset('dist/img/user8-128x128.jpg')}}')}}" alt="User Avatar" class="img-size-50 img-circle mr-3">
-              <div class="media-body">
-                <h3 class="dropdown-item-title">
-                  John Pierce
-                  <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
-                </h3>
-                <p class="text-sm">I got your message bro</p>
-                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-              </div>
-            </div>
-            <!-- Message End -->
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <!-- Message Start -->
-            <div class="media">
-              <img src="{{asset('dist/img/user3-128x128.jpg')}}')}}" alt="User Avatar" class="img-size-50 img-circle mr-3">
-              <div class="media-body">
-                <h3 class="dropdown-item-title">
-                  Nora Silvester
-                  <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>
-                </h3>
-                <p class="text-sm">The subject goes here</p>
-                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-              </div>
-            </div>
-            <!-- Message End -->
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-        </div>
-      </li>
-      <!-- Notifications Dropdown Menu -->
-      <li class="nav-item dropdown">
-        <a class="nav-link" data-toggle="dropdown" href="#">
-          <i class="far fa-bell"></i>
-          <span class="badge badge-warning navbar-badge">15</span>
-        </a>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <span class="dropdown-item dropdown-header">15 Notifications</span>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <i class="fas fa-envelope mr-2"></i> 4 new messages
-            <span class="float-right text-muted text-sm">3 mins</span>
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <i class="fas fa-users mr-2"></i> 8 friend requests
-            <span class="float-right text-muted text-sm">12 hours</span>
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <i class="fas fa-file mr-2"></i> 3 new reports
-            <span class="float-right text-muted text-sm">2 days</span>
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
-        </div>
-      </li>
+      
+      
       <li class="nav-item">
         <a class="nav-link" data-widget="fullscreen" href="#" role="button">
           <i class="fas fa-expand-arrows-alt"></i>
@@ -218,10 +123,12 @@
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Dashboard
-                <i class="right fas fa-angle-left"></i>
               </p>
             </a>
           </li>
+          <?php 
+          if(session()->get('Level') == "Admin"){
+          ?>
           <li class="nav-item">
             <a href="{{route('Anggota')}}" class="nav-link {{ Request::is('anggota*') ? 'active' : '' }}">
               <i class="nav-icon fas fa-user"></i>
@@ -235,11 +142,31 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{route('Peminjaman')}}" class="nav-link {{ Request::is('peminjaman*') ? 'active' : '' }}">
+            <a href="{{route('Pengajuan-Peminjaman')}}" class="nav-link {{ Request::is('pengajuan-peminjaman*') ? 'active' : '' }}">
               <i class="nav-icon fas fa-book-open"></i>
+              <p>Pengajuan Pinjaman</p>
+              <?php 
+              if($dt['x'] != 0){
+              ?>
+              <span class="badge badge-danger navbar-badge"><?=$dt['x'];?></span>
+              <?php
+              }
+              ?>
+            </a>
+          </li>
+          <?php 
+          }elseif(session()->get('Level') == "Anggota"){
+          ?>
+          <li class="nav-item">
+            <a href="{{route('Peminjaman')}}" class="nav-link {{ Request::is('peminjaman*') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-book-reader"></i>
               <p>Peminjaman</p>
             </a>
           </li>
+          <?php 
+          }
+          ?>
+          
           <li class="nav-item">
             <a href="{{route('Logout')}}" class="nav-link">
               <i class="nav-icon fas fa-sign-out-alt"></i>
@@ -359,6 +286,18 @@
       "serverSide": true,
       "ajax": "./server_side/server_processing_peminjaman.php"
     });
+    $('#example5').DataTable({
+      "paging": true,
+      "responsive": true,
+      "processing": true,
+      "serverSide": true,
+      "ajax": "./server_side/server_processing_pengajuan.php"
+    });
+  });
+
+  // tooltip
+  $(document).ready(function(){
+    $("[data-toggle='tooltip']").tooltip();
   });
 </script>
 
@@ -422,7 +361,7 @@ if (Session('cek') == "Berhasil") {
   <?php
 }
 // End Alert
-if (empty(session()->has('Id'))) {
+if (empty(session()->has('Level')) ) {
   ?>  
   <script>
     location.href ="/";
@@ -433,6 +372,7 @@ if (empty(session()->has('Id'))) {
 ?>
 
 <script>
+// Ajax Untuk Menghapus Buku
 function hapus_buku(x) {
   var del_id= x;
   var token = " {{ csrf_token() }}";
@@ -470,6 +410,7 @@ function hapus_buku(x) {
     });
 }
 
+// ajax untuk menghapus anggota
 function hapus_anggota(x) {
   var del_id= x;
   var token = " {{ csrf_token() }}";
@@ -502,6 +443,120 @@ function hapus_anggota(x) {
               error:function(xhr, status, error){
                
                   swal("Warning!", "Data Anggota Gagal Dihapus!"+xhr.responseText, "warning");
+              }
+          });
+    });
+}
+
+// ajax untuk memgkonfirmasi status peminjaman
+function konfirmasi(x){
+  var del_id= x;
+  var token = " {{ csrf_token() }}";
+  swal({
+  title: "Persetujuan Peminjaman!",
+  text: "Silahkan pilih untuk melakukan proses persetujuan!",
+  icon: "warning",
+  buttons: {
+    catch: {
+      text: "Setujui",
+      value: "catch",
+    },
+    Tidak: true,
+  },
+  dangerMode: true,
+})
+.then((value) => {
+  switch (value) {
+ 
+    case "Tidak":
+      $.ajax({
+        url: "/pengajuan/tidak",
+        type: "POST",
+        dataType: "JSON",
+        data: {
+            "id": del_id,
+            "_token" : token
+        },
+        success: function (data) {
+        if(data.message =="Berhasil"){
+            swal("Sukses!", "Peminjaman Tidak Disetujui!", "success").then(function(){
+                location.href="/pengajuan-peminjaman";
+            });
+        }else{
+            swal("Warning!", "404:Peminjaman Gagal Disetujui!", "warning");
+        }
+        },
+        error:function(xhr, status, error){
+         
+            swal("Warning!", "404:Peminjaman Gagal Disetujui!"+xhr.responseText, "warning");
+        }
+      });
+      break;
+ 
+    case "catch":
+      $.ajax({
+        url: "/pengajuan/setuju",
+        type: "POST",
+        dataType: "JSON",
+        data: {
+            "id": del_id,
+            "_token" : token
+        },
+        success: function (data) {
+        if(data.message =="Berhasil"){
+            swal("Sukses!", "Peminjaman Berhasil Disetujui!", "success").then(function(){
+                location.href="/pengajuan-peminjaman";
+            });
+        }else{
+            swal("Warning!", "404:Peminjaman Gagal Disetujui!", "warning");
+        }
+        },
+        error:function(xhr, status, error){
+         
+            swal("Warning!", "404:Peminjaman Gagal Disetujui!"+xhr.responseText, "warning");
+        }
+      });
+      break;
+ 
+    default:
+      
+  }
+});
+}
+
+// ajax untuk memperbaharui status peminjaman
+function returned(x) {
+  var del_id= x;
+  var token = " {{ csrf_token() }}";
+  swal({
+    title: "Apakah Anda Yakin?",
+    text: "Apakah Buku Ini Sudah Di kembalikan?",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  })
+  .then((willDelete) => {
+    if (!willDelete) return;
+          $.ajax({
+              url: "/pengajuan/returned",
+              type: "POST",
+              dataType: "JSON",
+              data: {
+                  "id": del_id,
+                  "_token" : token
+              },
+              success: function (data) {
+              if(data.message =="Berhasil"){
+                  swal("Sukses!", "Berhasil Memperbaharui Status Peminjaman!", "success").then(function(){
+                      location.href="/anggota";
+                  });
+              }else{
+                  swal("Warning!", "Gagal Memperbaharui Status Peminjaman!", "warning");
+              }
+              },
+              error:function(xhr, status, error){
+               
+                  swal("Warning!", "Gagal Memperbaharui Status Peminjaman!"+xhr.responseText, "warning");
               }
           });
     });

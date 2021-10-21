@@ -1,7 +1,15 @@
 @extends('Layout.main')
 
 @section('content')
-
+<?php 
+if (session()->get('Level') != "Admin" ) {
+  ?>  
+  <script>
+    location.href ="/dashboard";
+  </script>
+  <?php
+}
+?>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">

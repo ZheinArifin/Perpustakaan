@@ -6,6 +6,13 @@ $con=mysqli_connect('localhost','root','','perpustakaan');
 $kode = mysqli_fetch_array(mysqli_query($con, "SELECT max(id) as kd FROM anggota"));
 $kd = $kode['kd'];
 $kd++;
+if (session()->get('Level') != "Admin" ) {
+  ?>  
+  <script>
+    location.href ="/dashboard";
+  </script>
+  <?php
+}
 ?>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->

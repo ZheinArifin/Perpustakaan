@@ -24,8 +24,12 @@ Route:: POST('/login', 'LoginController@PostLogin')->name('PostLogin');
 // Logout
 Route:: GET('/logout', 'LoginController@Logout')->name('Logout');
 
-// Api
+// =========================================== RESTFULL API ========================================== //
 Route:: GET('/api/books', 'ApiController@get_all_book');
+Route:: GET('/api/books/{id}', 'ApiController@edit_book');
+Route:: POST('/api/books', 'ApiController@save_book');
+Route:: PUT('/api/books/{id}', 'ApiController@update_book');
+Route:: DELETE('api/books/{id}', 'ApiController@delete_book');
 
 // ============================================== Page ============================================== //
 Route:: GET('/dashboard', function () {
@@ -65,6 +69,12 @@ Route:: GET('/dashboard', function () {
     // ============================================== Page Peminjaman ============================================== //
     Route:: GET('/peminjaman', 'PeminjamanController@peminjaman')->name('Peminjaman');
     Route:: POST('/peminjaman/add/save', 'PeminjamanController@save_peminjaman');
+
+    Route:: GET('/pengajuan-peminjaman', 'PeminjamanController@pengajuan_peminjaman')->name('Pengajuan-Peminjaman');
+    Route:: POST('/pengajuan/setuju', 'PeminjamanController@setujui_peminjaman');
+    Route:: POST('/pengajuan/tidak', 'PeminjamanController@disagree_peminjaman');
+    Route:: POST('/pengajuan/returned', 'PeminjamanController@return_peminjaman');
+    
 
     // Route:: GET('/peminjaman/add', function () {
     //     return view('Page.Peminjaman.add-anggota');

@@ -9,6 +9,15 @@ $kd_buku = (int) substr($kode['kd'], 3, 3);
 $kd_buku++;
 $huruf = "BK";
 $kodeBuku = $huruf . sprintf("%03s", $kd_buku);
+
+// cek Level login
+if (session()->get('Level') != "Admin" ) {
+    ?>  
+    <script>
+      location.href ="/dashboard";
+    </script>
+    <?php
+}
 ?>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->

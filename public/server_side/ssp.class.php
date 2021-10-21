@@ -55,21 +55,21 @@ class SSP {
 						$con=mysqli_connect('localhost','root','','perpustakaan');
 						if($table == "peminjaman"){
 							
-							if($j == 4){
-								if($data[$i][ $columns[4]['db'] ] == "Dipinjam" || $data[$i][ $columns[4]['db'] == 'Dikembalikan']){
-									if($data[$i][ $columns[4]['db'] ] == "Dipinjam"){
+							if($j == 4 || $j == 5){
+								// if($data[$i][ $columns[$j]['db'] ] == "Dipinjam" || $data[$i][ $columns[$j]['db'] ] == "Dikembalikan" ){
+									if($data[$i][ $columns[$j]['db'] ] == "Dipinjam"){
 										$status = "Borrow";
 										$color = "btn-danger";
-									}elseif($data[$i][ $columns[4]['db'] ] == "Dikembalikan"){
+									}elseif($data[$i][ $columns[$j]['db'] ] == "Dikembalikan"){
 										$status = "Returned";
 										$color = "btn-success";
 									}else{
 										$status = "Waiting";
 										$color = "btn-warning";
 									}
-									$row[ $column['dt'] ] = "<center><a href=/peminjaman/$id class='btn $color text-white' style='border-radius:25px; padding:5px 15px'>$status</a>
+									$row[ $column['dt'] ] = "<center><p  class=' $color text-white' style='border-radius:25px; padding:5px 10px'>$status</p>
 									";
-								}
+								// }
 							}else{
 								if($j == '1' || $j == '2'){
 									$dt = $data[$i][ $columns[$j]['db'] ];
@@ -105,9 +105,16 @@ class SSP {
 							<a href='javascript:void(0)' onclick=hapus_anggota('$id')  class='btn btn-danger text-white' style='border-radius:25px; padding:5px 15px; width:50px' title='Delete'><i class='fas fa-trash'></i> </a></center>
 							";
 						}elseif($table == "peminjaman"){
-							$row[ $column['dt'] ] = "<center><a href=/peminjaman/$id class='btn btn-warning text-white' style='border-radius:25px; padding:5px 15px; width:50px' title='edit' ><i class='fas fa-edit'></i></a> 
-							<a href='javascript:void(0)' onclick=hapus_peminjaman('$id')  class='btn btn-danger text-white' style='border-radius:25px; padding:5px 15px; width:50px' title='Delete'><i class='fas fa-trash'></i> </a></center>
-							";
+							if($data[$i][ $columns[5]['db'] ] == "Menunggu Persetujuan" ){
+								$row[ $column['dt'] ] = "<center><a href='javascript:void(0)' onclick=konfirmasi('$id') class='btn btn-warning text-white' style='border-radius:25px; padding:5px 15px; width:50px' data-toggle='tooltip' title='Waiting for Approval' ><i class='fas fa-file-download'></i></a> 
+								";
+							}elseif($data[$i][ $columns[5]['db']] == 'Dikembalikan'){
+								$row[ $column['dt'] ] = "<a href='javascript:void(0)' class='btn btn-success text-white' style='border-radius:25px; padding:5px 15px; width:50px; pointer-events: none;' data-toggle='tooltip' title='Book Returned'><i class='fas fa-book'></i> </a></center>
+								";
+							}else{
+								$row[ $column['dt'] ] = "<a href='javascript:void(0)' onclick=returned('$id') class='btn btn-danger text-white' style='border-radius:25px; padding:5px 15px; width:50px' data-toggle='tooltip' title='Borrow'><i class='fas fa-book-reader'></i> </a></center>
+								";
+							}
 						}
 						
                     }

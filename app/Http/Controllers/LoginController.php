@@ -25,8 +25,8 @@ class LoginController extends Controller
 
         if(!empty($users->level)) {
             $request->session()->put('Nama', $users->nama);
-            $request->session()->put('Id', $users->id);
-          	$request->session()->put('Level', $users->level);
+            $request->session()->put('Id_admin', $users->id);
+          	$request->session()->put('Level', "Admin");
           	$request->session()->put('login', 'Berhasil');
             $cek = "Berhasil";
         }else {

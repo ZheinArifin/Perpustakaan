@@ -6,6 +6,15 @@ $con=mysqli_connect('localhost','root','','perpustakaan');
 $kode = mysqli_fetch_array(mysqli_query($con, "SELECT max(id) as kd FROM peminjaman"));
 $kd = $kode['kd'];
 $kd++;
+
+// cek Level login
+if (session()->get('Level') != "Anggota" ) {
+  ?>  
+  <script>
+    location.href ="/dashboard";
+  </script>
+  <?php
+}
 ?>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -89,7 +98,7 @@ $kd++;
                 <div class="row">
                     <div class="col-md-12">
                         <label for="">Buku</label>
-                        <select name="buku" class="form-control" id="">{{$buku}}
+                        <select name="buku" class="form-control" id="">
                             <?php 
                                 foreach($buku as $val){
                                     echo "<option value='$val->kd_buku'>$val->judul_buku</option>";
