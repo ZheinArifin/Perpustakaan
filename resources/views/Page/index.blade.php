@@ -604,4 +604,4 @@
     </section>
     <!-- /.content -->
   </div>
-@endsession
+@endsection

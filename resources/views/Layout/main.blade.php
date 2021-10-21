@@ -25,6 +25,12 @@
   <link rel="stylesheet" href="{{asset('plugins/daterangepicker/daterangepicker.css')}}">
   <!-- summernote -->
   <link rel="stylesheet" href="{{asset('plugins/summernote/summernote-bs4.min.css')}}">
+
+  <!-- DataTables -->
+  <link rel="stylesheet" href="{{asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}">
+  <link rel="stylesheet" href="{{asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}">
+  <link rel="stylesheet" href="{{asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css')}}">
+
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -208,12 +214,18 @@
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <li class="nav-item menu-open">
-            <a href="/Dashboard" class="nav-link active">
+            <a href="/dashboard" class="nav-link active">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Dashboard
                 <i class="right fas fa-angle-left"></i>
               </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{route('Buku')}}" class="nav-link">
+              <i class="nav-icon fas fa-book"></i>
+              <p>Buku</p>
             </a>
           </li>
           <li class="nav-item">
@@ -283,11 +295,46 @@
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{asset('dist/js/pages/dashboard.js')}}"></script>
 
+<!-- DataTables  & Plugins -->
+<script src="{{asset('plugins/datatables/jquery.dataTables.min.js')}}"></script>
+<script src="{{asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+<script src="{{asset('plugins/datatables-responsive/js/dataTables.responsive.min.js')}}"></script>
+<script src="{{asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js')}}"></script>
+<script src="{{asset('plugins/datatables-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js')}}"></script>
+<script src="{{asset('plugins/jszip/jszip.min.js')}}"></script>
+<script src="{{asset('plugins/pdfmake/pdfmake.min.js')}}"></script>
+<script src="{{asset('plugins/pdfmake/vfs_fonts.js')}}"></script>
+<script src="{{asset('plugins/datatables-buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{asset('plugins/datatables-buttons/js/buttons.print.min.js')}}"></script>
+<script src="{{asset('plugins/datatables-buttons/js/buttons.colVis.min.js')}}"></script>
+
 <!-- Sweetalert -->
 <script src="{{asset('dist/js/sweetalert.min.js')}}"></script>
 
 </body>
 </html>
+<!-- data tables -->
+<script>
+  $(function () {
+    $("#example1").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    $('#example2').DataTable({
+      "paging": true,
+      // "lengthChange": false,
+      // "searching": false,
+      // "ordering": true,
+      // "info": true,
+      // "autoWidth": false,
+      "responsive": true,
+      "processing": true,
+      "serverSide": true,
+      "ajax": "./server_side/server_processing.php"
+    });
+  });
+</script>
 
 <?php 
 if (session()->has('login') == "Berhasil") {
@@ -305,6 +352,50 @@ if (session()->has('login') == "Berhasil") {
   session()->put('login') == "Sudah Login";
 }
 
+// Alert
+if (Session('cek') == "Berhasil") {
+        
+  if(Session('edit') == "Berhasil"){
+      ?>
+     <script type="text/javascript">
+          setTimeout(function(){location.href=" <?= Session('href'); ?>"}, 6000);
+     </script> 
+      <?php
+  }
+  ?>
+  <script type="text/javascript">
+      $('html, body').animate({ scrollTop: 0 }, 'slow');
+      var alert = document.getElementById("success");
+      setTimeout(function() {
+          $("#success").slideDown("slow");
+      }, 2000);
+      alert.innerHTML= "<i class='fas fa-exclamation-triangle'></i> <?= Session('message'); ?>";
+      setTimeout(function() {
+          $("#success").fadeTo(2000, 500).slideUp(500, function(){
+          $("#success").slideUp(500);
+           });
+      }, 5000);
+   </script>
+  <?php
+}elseif (Session('cek') == "Gagal") {
+  ?>
+  <script type="text/javascript">
+      $('html, body').animate({ scrollTop: 0 }, 'slow');
+      var alert = document.getElementById("fail");
+      setTimeout(function() {
+          $("#fail").slideDown("slow");
+      }, 2000);
+      alert.innerHTML= "<i class='fas fa-exclamation-triangle'></i> <?= Session('message'); ?>";
+
+      setTimeout(function() {
+          $("#fail").fadeTo(2000, 500).slideUp(500, function(){
+          $("#fail").slideUp(500);
+          });
+      }, 5000);
+  </script>
+  <?php
+}
+// End Alert
 if (empty(session()->has('Id'))) {
   ?>  
   <script>
@@ -312,4 +403,44 @@ if (empty(session()->has('Id'))) {
   </script>
   <?php
 }
+
 ?>
+
+<script>
+function hapus_buku(x) {
+  var del_id= x;
+  var token = " {{ csrf_token() }}";
+  swal({
+    title: "Apakah Anda Yakin?",
+    text: "Ketika Menghapus, Anda Tidak Bisa Mengembalikan Data Kembali",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  })
+  .then((willDelete) => {
+    if (!willDelete) return;
+          $.ajax({
+              url: "/book/delete/"+del_id,
+              type: "DELETE",
+              dataType: "JSON",
+              data: {
+                  "id": del_id,
+                  "_token" : token
+              },
+              success: function (data) {
+              if(data.message =="Berhasil"){
+                  swal("Sukses!", "Data Buku Berhasil Dihapus!", "success").then(function(){
+                      location.href="/books";
+                  });
+              }else{
+                  swal("Warning!", "Data Buku Gagal Dihapus!", "warning");
+              }
+              },
+              error:function(xhr, status, error){
+               
+                  swal("Warning!", "Data Buku Gagal Dihapus!"+xhr.responseText, "warning");
+              }
+          });
+    });
+}
+</script>

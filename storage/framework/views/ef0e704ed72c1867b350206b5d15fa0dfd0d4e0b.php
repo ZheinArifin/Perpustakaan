@@ -604,5 +604,5 @@
     </section>
     <!-- /.content -->
   </div>
-@endsession
+<?php $__env->stopSection(); ?>
 <?php echo $__env->make('Layout.main', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\Perpustakaan\resources\views/Page/index.blade.php ENDPATH**/ ?>
